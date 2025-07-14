@@ -1,0 +1,235 @@
+@import url('https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Sanskrit:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Hanuman Mandir Design System - Sacred Hindu Color Palette */
+
+@layer base {
+  :root {
+    /* Sacred Hindu Colors */
+    --background: 42 100% 96%; /* Cream background */
+    --foreground: 14 85% 15%; /* Dark maroon text */
+
+    --card: 42 100% 98%; /* Lighter cream for cards */
+    --card-foreground: 14 85% 15%;
+
+    --popover: 42 100% 98%;
+    --popover-foreground: 14 85% 15%;
+
+    /* Saffron Primary */
+    --primary: 28 100% 60%; /* Sacred saffron */
+    --primary-foreground: 42 100% 98%;
+    
+    /* Maroon Secondary */
+    --secondary: 14 85% 25%; /* Deep maroon */
+    --secondary-foreground: 42 100% 98%;
+
+    --muted: 42 50% 92%;
+    --muted-foreground: 14 40% 40%;
+
+    /* Gold Accent */
+    --accent: 45 100% 55%; /* Sacred gold */
+    --accent-foreground: 14 85% 15%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 42 100% 98%;
+
+    --border: 42 30% 85%;
+    --input: 42 30% 85%;
+    --ring: 28 100% 60%;
+
+    --radius: 0.75rem;
+    
+    /* Custom Hanuman Temple Colors */
+    --saffron: 28 100% 60%;
+    --saffron-light: 32 100% 75%;
+    --maroon: 14 85% 25%;
+    --maroon-dark: 14 85% 15%;
+    --gold: 45 100% 55%;
+    --gold-light: 48 100% 70%;
+    --cream: 42 100% 96%;
+    --cream-dark: 42 50% 88%;
+    
+    /* Sacred Gradients */
+    --gradient-saffron: linear-gradient(135deg, hsl(var(--saffron)), hsl(var(--saffron-light)));
+    --gradient-gold: linear-gradient(135deg, hsl(var(--gold)), hsl(var(--gold-light)));
+    --gradient-maroon: linear-gradient(135deg, hsl(var(--maroon-dark)), hsl(var(--maroon)));
+    --gradient-sacred: linear-gradient(135deg, hsl(var(--saffron)) 0%, hsl(var(--gold)) 50%, hsl(var(--maroon)) 100%);
+    
+    /* Sacred Shadows */
+    --shadow-saffron: 0 10px 30px -10px hsl(var(--saffron) / 0.3);
+    --shadow-gold: 0 8px 25px -8px hsl(var(--gold) / 0.4);
+    --shadow-sacred: 0 15px 35px -10px hsl(var(--maroon) / 0.2);
+    
+    /* Sacred Animations */
+    --transition-divine: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-blessing: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-poppins;
+  }
+  
+  /* Sacred Typography */
+  .font-sanskrit {
+    font-family: 'Tiro Devanagari Sanskrit', serif;
+  }
+  
+  .font-poppins {
+    font-family: 'Poppins', sans-serif;
+  }
+}
+
+@layer components {
+  /* Sacred Button Variants */
+  .btn-saffron {
+    @apply bg-gradient-to-r from-[hsl(var(--saffron))] to-[hsl(var(--saffron-light))] text-white shadow-[var(--shadow-saffron)] transition-[var(--transition-divine)] hover:shadow-xl hover:scale-105;
+  }
+  
+  .btn-gold {
+    @apply bg-gradient-to-r from-[hsl(var(--gold))] to-[hsl(var(--gold-light))] text-[hsl(var(--maroon))] shadow-[var(--shadow-gold)] transition-[var(--transition-divine)] hover:shadow-xl hover:scale-105;
+  }
+  
+  .btn-maroon {
+    @apply bg-gradient-to-r from-[hsl(var(--maroon-dark))] to-[hsl(var(--maroon))] text-white shadow-[var(--shadow-sacred)] transition-[var(--transition-divine)] hover:shadow-xl hover:scale-105;
+  }
+  
+  /* Sacred Card Styles */
+  .card-sacred {
+    @apply bg-gradient-to-br from-[hsl(var(--cream))] to-[hsl(var(--cream-dark))] border border-[hsl(var(--gold))] shadow-[var(--shadow-gold)] rounded-xl transition-[var(--transition-divine)] hover:shadow-2xl hover:-translate-y-1;
+  }
+  
+  /* Sacred Background Patterns */
+  .bg-sacred-pattern {
+    background-image: 
+      radial-gradient(circle at 20px 20px, hsl(var(--gold) / 0.1) 1px, transparent 0),
+      radial-gradient(circle at 60px 60px, hsl(var(--saffron) / 0.08) 1px, transparent 0);
+    background-size: 80px 80px, 120px 120px;
+  }
+  
+  /* Flag Animation */
+  .flag-wave {
+    animation: flag-wave 3s ease-in-out infinite;
+    transform-origin: left center;
+  }
+  
+  @keyframes flag-wave {
+    0%, 100% { transform: rotate(-2deg) scale(1); }
+    25% { transform: rotate(2deg) scale(1.05); }
+    50% { transform: rotate(-1deg) scale(1.02); }
+    75% { transform: rotate(1deg) scale(1.05); }
+  }
+  
+  /* Sacred Animations */
+  .animate-fade-in {
+    animation: fade-in 0.8s ease-out;
+  }
+  
+  .animate-slide-in-left {
+    animation: slide-in-left 0.8s ease-out;
+  }
+  
+  .animate-slide-in-right {
+    animation: slide-in-right 0.8s ease-out;
+  }
+  
+  .animate-pulse-sacred {
+    animation: pulse-sacred 2s ease-in-out infinite;
+  }
+  
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes slide-in-left {
+    from { opacity: 0; transform: translateX(-30px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  
+  @keyframes slide-in-right {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  
+  @keyframes pulse-sacred {
+    0%, 100% { 
+      box-shadow: 0 0 0 0 hsl(var(--saffron) / 0.4);
+    }
+    50% { 
+      box-shadow: 0 0 0 20px hsl(var(--saffron) / 0);
+    }
+  }
+  
+  /* Sanskrit Text Styling */
+  .text-sanskrit {
+    @apply font-sanskrit text-[hsl(var(--maroon))] font-bold;
+  }
+  
+  /* Sacred Mandala Background */
+  .mandala-bg {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ff9d00' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3Ccircle cx='30' cy='30' r='12'/%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+}
