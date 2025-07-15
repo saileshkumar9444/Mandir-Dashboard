@@ -1352,6 +1352,9 @@ export default function HanumanMandir() {
           <div className="mt-4 text-sm opacity-75">
             © 2024 श्री हनुमान मंदिर - All Rights Reserved
           </div>
+          <div className="mt-2 text-xs opacity-60">
+            Developed by <a href="https://github.com/saileshkumar9444" className="hover:underline" target="_blank" rel="noopener noreferrer">Sailesh Kumar</a>
+          </div>
         </div>
       </footer>
 
