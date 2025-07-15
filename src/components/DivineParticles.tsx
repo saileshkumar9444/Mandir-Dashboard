@@ -5,7 +5,7 @@ const PARTICLE_TYPES = [
   { type: 'temple', content: '🛕' },
   { type: 'jai', content: 'जय श्री राम' },
 ];
-const PARTICLE_COUNT = 18;
+const PARTICLE_COUNT = 1;
 
 function getRandom(min: number, max: number) {
   return Math.random() * (max - min) + min;
@@ -53,43 +53,19 @@ const DivineParticles: React.FC = () => {
     // eslint-disable-next-line
   }, []);
 
+  // Show a few (3) subtle spiritual emojis in different corners
   return (
-    <div style={{ pointerEvents: 'none', position: 'fixed', inset: 0, zIndex: 1000 }}>
-      {particles.map((p, i) => (
-        <span
-          key={p.key}
-          style={{
-            position: 'absolute',
-            left: `${p.left}%`,
-            top: `${p.top}%`,
-            fontSize: p.size,
-            color: p.color,
-            textShadow: `0 0 8px ${p.glow}, 0 0 2px #fff8dc` + (p.type === 'jai' ? ', 0 0 16px #FFD700' : ''),
-            opacity: 0,
-            fontFamily: p.type === 'jai' ? 'Noto Sans Devanagari, serif' : 'serif',
-            fontWeight: p.type === 'jai' ? 700 : 400,
-            letterSpacing: p.type === 'jai' ? 1 : undefined,
-            transform: `rotate(${p.rotate}deg)`,
-            animation: `divineFadeFloat${i} ${p.duration}s ${p.delay}s linear forwards`,
-            userSelect: 'none',
-            zIndex: 1000,
-            whiteSpace: 'nowrap',
-          }}
-        >
-          {p.type === 'temple' ? (
-            <span role="img" aria-label="temple">🛕</span>
-          ) : p.content}
-          <style>{`
-            @keyframes divineFadeFloat${i} {
-              0% { opacity: 0; transform: rotate(${p.rotate}deg) translate(0, 0); }
-              10% { opacity: 1; }
-              80% { opacity: 1; transform: rotate(${p.rotate}deg) translate(${p.driftX}px, ${p.driftY}px); }
-              100% { opacity: 0; transform: rotate(${p.rotate}deg) translate(${p.driftX}px, ${p.driftY}px); }
-            }
-          `}</style>
-        </span>
-      ))}
+    <>
+      <div style={{ pointerEvents: 'none', position: 'absolute', left: 24, bottom: 24, zIndex: 1000, opacity: 0.18 }}>
+        <span style={{ fontSize: 64, color: '#FFA500', fontFamily: 'Tiro Devanagari Sanskrit, serif', textShadow: '0 0 12px #FFD700' }}>ॐ</span>
+      </div>
+      <div style={{ pointerEvents: 'none', position: 'absolute', right: 32, top: 32, zIndex: 1000, opacity: 0.15 }}>
+        <span style={{ fontSize: 48, color: '#FFD700', fontFamily: 'Noto Sans Devanagari, serif', textShadow: '0 0 8px #FFA500' }}>जय श्री राम</span>
+      </div>
+      <div style={{ pointerEvents: 'none', position: 'absolute', right: 40, bottom: 40, zIndex: 1000, opacity: 0.13 }}>
+        <span style={{ fontSize: 56, color: '#FFD700', textShadow: '0 0 10px #FFA500' }}>🛕</span>
     </div>
+    </>
   );
 };
 

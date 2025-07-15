@@ -20,7 +20,8 @@ import {
   Video,
   Camera,
   Globe,
-  BookOpen as BookOpenIcon
+  BookOpen as BookOpenIcon,
+  Sparkles
 } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import SpiritualBookViewer from '@/components/SpiritualBookViewer';
@@ -28,12 +29,16 @@ import FloatingSymbols from '@/components/FloatingSymbols';
 import SubtleDivineBackground from '@/components/SubtleDivineBackground';
 import DivineEffects from '@/components/DivineEffects';
 import DownloadLanguageModal from '../components/DownloadLanguageModal';
+import RamChakra from '../components/RamChakra';
+import { Link } from 'react-router-dom';
+import { useLanguage } from '../context/LanguageContext';
+import DivineParticles from '@/components/DivineParticles';
 
 // Language content
 const content = {
   hindi: {
     title: "🙏 जय श्री राम 🙏",
-    subtitle: "श्री हनुमान मंदिर",
+    subtitle: "श्री महावीर हनुमान मंदिर",
     nav: {
       home: "मुख्य पृष्ठ",
       about: "हमारे बारे में", 
@@ -47,7 +52,7 @@ const content = {
     },
     about: {
       title: "श्री हनुमान मंदिर के बारे में",
-      story: "यह पवित्र हनुमान मंदिर धनहारा, टोले रामपुर, औरंगाबाद, बिहार में स्थित है। यहाँ भगवान हनुमान की महान शक्ति और कृपा से हजारों भक्तों की मनोकामनाएं पूर्ण होती हैं। यह मंदिर न केवल एक पूजा स्थल है, बल्कि समुदाय की आध्यात्मिक शक्ति का केंद्र भी है।",
+      story: `श्री हनुमान मंदिर, धनहारा, टोले रामपुर, औरंगाबाद (बिहार) में स्थित एक अत्यंत पावन और श्रद्धा का स्थान है। वर्तमान में यह मंदिर निर्माणाधीन है, लेकिन जिस भूमि पर यह स्थित है, वह अत्यंत प्राचीन और धार्मिक दृष्टि से महत्वपूर्ण मानी जाती है।\n\nयह स्थान भगवान श्री हनुमान जी की दिव्य उपस्थिति का प्रतीक रहा है और वर्षों से स्थानीय श्रद्धालुओं द्वारा पूजा जाता रहा है। यहाँ की भूमि को मंदिर निर्माण के लिए समर्पित किया जा चुका है और भक्तगण इसे चमत्कारी और कृपा से भरपूर मानते हैं।\n\nयह स्थान न केवल एक भविष्य का भव्य मंदिर बनेगा, बल्कि पूरे समुदाय की आस्था, एकता और आध्यात्मिकता का केंद्र भी सिद्ध होगा। सभी श्रद्धालुओं की सामूहिक सहयोग और आस्था से बहुत जल्द यहाँ एक दिव्य श्री हनुमान मंदिर का निर्माण संभव होगा।`,
       address: "पूरा पता: धनहारा, टोले रामपुर, औरंगाबाद, बिहार, 824121, भारत"
     },
     donate: {
@@ -104,7 +109,16 @@ const content = {
       phone: "फ़ोन",
       email: "ईमेल"
     },
-    footer: "भगवान हनुमान आपको और आपके परिवार को आशीर्वाद दें।"
+    footer: "भगवान हनुमान आपको और आपके परिवार को आशीर्वाद दें।",
+    virtualTempleTitle: "🕉️ आभासी हनुमान मंदिर 🕉️",
+    virtualTempleDesc: "अपने घर से ही श्री हनुमान जी के दर्शन करें और आभासी पूजा का अनुभव लें",
+    virtualTempleEnter: "आभासी मंदिर में प्रवेश करें",
+    virtualTempleAarti: "आरती",
+    virtualTempleAartiDesc: "श्री हनुमान जी की आरती करें",
+    virtualTempleWish: "मनोकामना",
+    virtualTempleWishDesc: "अपनी इच्छा हनुमान जी को बताएं",
+    virtualTemplePushpanjali: "पुष्पांजलि",
+    virtualTemplePushpanjaliDesc: "फूलों से हनुमान जी को सजाएं",
   },
   english: {
     title: "🙏 Jai Shree Ram 🙏",
@@ -178,7 +192,16 @@ const content = {
       phone: "Phone", 
       email: "Email"
     },
-    footer: "May Lord Hanuman bless you and your family."
+    footer: "May Lord Hanuman bless you and your family.",
+    virtualTempleTitle: "🕉️ Virtual Hanuman Temple 🕉️",
+    virtualTempleDesc: "Experience Hanumanji's darshan and virtual pooja from your home",
+    virtualTempleEnter: "Enter Virtual Temple",
+    virtualTempleAarti: "Aarti",
+    virtualTempleAartiDesc: "Perform aarti of Shri Hanumanji",
+    virtualTempleWish: "Wish",
+    virtualTempleWishDesc: "Tell your wish to Hanumanji",
+    virtualTemplePushpanjali: "Pushpanjali",
+    virtualTemplePushpanjaliDesc: "Adorn Hanumanji with flowers",
   },
   bhojpuri: {
     title: "🙏 जय श्री राम 🙏",
@@ -252,7 +275,16 @@ const content = {
       phone: "फोन",
       email: "ईमेल"
     },
-    footer: "भगवान हनुमान रउआ आउ रउआ के परिवार के आशीर्वाद दें।"
+    footer: "भगवान हनुमान रउआ आउ रउआ के परिवार के आशीर्वाद दें।",
+    virtualTempleTitle: "🕉️ आभासी हनुमान मंदिर 🕉️",
+    virtualTempleDesc: "घर बैठे हनुमान जी के दर्शन करीं आ आभासी पूजा के अनुभव लीं",
+    virtualTempleEnter: "आभासी मंदिर में जाईं",
+    virtualTempleAarti: "आरती",
+    virtualTempleAartiDesc: "हनुमान जी के आरती करीं",
+    virtualTempleWish: "मनोकामना",
+    virtualTempleWishDesc: "अपना इच्छा हनुमान जी के बताईं",
+    virtualTemplePushpanjali: "पुष्पांजलि",
+    virtualTemplePushpanjaliDesc: "फूल से हनुमान जी के सजाईं",
   }
 };
 
@@ -444,7 +476,7 @@ const FloatingDivineSymbols = () => (
 // Add CSS for divine button and title effects
 
 export default function HanumanMandir() {
-  const [language, setLanguage] = useState('hindi');
+  const { language, setLanguage } = useLanguage();
   const [donors, setDonors] = useState([]);
   const [donorName, setDonorName] = useState('');
   const [donationAmount, setDonationAmount] = useState('');
@@ -674,60 +706,158 @@ export default function HanumanMandir() {
       </nav>
 
       {/* Hero Section */}
-      <section id="home" className="py-20 text-center animate-fade-in relative" style={{
-        // backgroundImage: "url('/ram-hanuman-bg (1).jpeg')",
-        // backgroundSize: 'cover',
-        // backgroundPosition: 'center',
-        // backgroundRepeat: 'no-repeat',
-      }}>
-        <div style={{ position: 'relative', zIndex: 2 }}>
-          <h1 className="text-sanskrit text-4xl md:text-6xl font-bold mb-4 text-[hsl(var(--maroon))] flex items-center justify-center gap-4">
-            <span role="img" aria-label="folded hands">🙏</span>
-            {t.title}
-            <span role="img" aria-label="folded hands">🙏</span>
-          </h1>
-          <h2 className="text-sanskrit text-2xl md:text-3xl mb-8 text-[hsl(var(--saffron))]">
-            {t.subtitle}
-          </h2>
-          <div className="animate-pulse-sacred inline-block p-4 rounded-full bg-gradient-to-r from-[hsl(var(--saffron))] to-[hsl(var(--gold))]">
-            <Heart className="w-8 h-8 text-white" />
+      <section id="home" className="py-20 text-center animate-fade-in relative">
+        <div className="flex flex-row items-center justify-center gap-8" style={{position: 'relative', zIndex: 2}}>
+          <div style={{ marginLeft: '-6cm' }}>
+            <RamChakra />
+          </div>
+          <div>
+            <h1 className="text-sanskrit text-4xl md:text-6xl font-bold mb-4 flex items-center justify-center gap-4 animate-fade-in" 
+                style={{
+                  background: 'linear-gradient(135deg, #8B0000 0%, #DC143C 50%, #FF4500 100%)',
+                  backgroundClip: 'text',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  textShadow: '0 2px 8px #6b1b1b, 0 4px 16px #fffbe6, 0 0 2px #fff',
+                  filter: 'drop-shadow(0 2px 4px rgba(255, 215, 0, 0.5))',
+                  WebkitTextStroke: '1px #6b1b1b'
+                }}>
+              <span role="img" aria-label="folded hands" className="animate-bounce">🙏</span>
+              {t.title}
+              <span role="img" aria-label="folded hands" className="animate-bounce" style={{animationDelay: '0.5s'}}>🙏</span>
+            </h1>
+            <h2 className="text-sanskrit text-2xl md:text-4xl mb-8 animate-fade-in" 
+                style={{
+                  background: 'linear-gradient(135deg, #FF8C00 0%, #FFD700 50%, #FFA500 100%)',
+                  backgroundClip: 'text',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  textShadow: '0 2px 8px #b36b00, 0 4px 16px #fffbe6, 0 0 2px #fff',
+                  filter: 'drop-shadow(0 1px 2px rgba(255, 215, 0, 0.4))',
+                  fontWeight: '700',
+                  letterSpacing: '0.05em',
+                  WebkitTextStroke: '0.7px #b36b00'
+                }}>
+              {t.subtitle}
+            </h2>
+            <div className="animate-pulse-sacred inline-block p-4 rounded-full bg-gradient-to-r from-[hsl(var(--saffron))] to-[hsl(var(--gold))]">
+              <Heart className="w-8 h-8 text-white" />
+            </div>
+          </div>
+          {/* Right side image with artistic styling */}
+          <div className="hidden md:block" style={{ marginRight: '-6cm' }}>
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-br from-[hsl(var(--gold))] to-[hsl(var(--saffron))] rounded-full blur-xl opacity-30 animate-pulse"></div>
+              <img 
+                src="/download (1).jpeg" 
+                alt="Divine Hanuman"
+                className="relative z-10 w-64 h-64 object-cover rounded-full border-4 border-[hsl(var(--gold))] shadow-2xl"
+                style={{
+                  filter: 'drop-shadow(0 8px 32px rgba(255, 193, 7, 0.4)) brightness(1.1) contrast(1.2) saturate(1.3)',
+                  clipPath: 'circle(50% at 50% 50%)',
+                  background: 'transparent',
+                  mixBlendMode: 'multiply',
+                  backgroundColor: 'transparent'
+                }}
+              />
+              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-transparent via-transparent to-[hsl(var(--gold)/0.1)] pointer-events-none"></div>
+            </div>
+          </div>
+          {/* Mobile version of the image */}
+          <div className="md:hidden flex justify-center mt-8">
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-br from-[hsl(var(--gold))] to-[hsl(var(--saffron))] rounded-full blur-xl opacity-30 animate-pulse"></div>
+              <img 
+                src="/download (1).jpeg" 
+                alt="Divine Hanuman"
+                className="relative z-10 w-48 h-48 object-cover rounded-full border-4 border-[hsl(var(--gold))] shadow-2xl"
+                style={{
+                  filter: 'drop-shadow(0 8px 32px rgba(255, 193, 7, 0.4)) brightness(1.1) contrast(1.2) saturate(1.3)',
+                  clipPath: 'circle(50% at 50% 50%)',
+                  background: 'transparent',
+                  mixBlendMode: 'multiply',
+                  backgroundColor: 'transparent'
+                }}
+              />
+              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-transparent via-transparent to-[hsl(var(--gold)/0.1)] pointer-events-none"></div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* About Section */}
-      <section id="about" className="py-16 container mx-auto px-4">
-        <Card className="card-sacred animate-slide-in-left max-w-4xl mx-auto">
-          <CardHeader>
-            <CardTitle className="text-sanskrit text-3xl text-center text-[hsl(var(--maroon))]">
-              {t.about.title}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <p className="text-lg leading-relaxed text-center">
-              {t.about.story}
-            </p>
-            <div className="text-center">
-              <p className="font-semibold text-[hsl(var(--maroon))] flex items-center justify-center gap-2">
-                <MapPin className="w-5 h-5" />
-                {t.about.address}
+      <section id="about" className="py-16 container mx-auto px-4 relative">
+        <Card
+          className="card-sacred animate-slide-in-left max-w-4xl mx-auto relative overflow-hidden"
+          style={{
+            backgroundImage: "url('/Hanuman ji.jpeg')",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+          }}
+        >
+          {/* Overlay for readability */}
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'rgba(255,255,255,0.75)', // Soft overlay for readability
+              zIndex: 1,
+              pointerEvents: 'none',
+              borderRadius: 'inherit',
+              boxSizing: 'border-box',
+            }}
+          />
+          <div className="relative z-10">
+            <CardHeader>
+              <CardTitle className="text-sanskrit text-3xl text-center text-[hsl(var(--maroon))]">
+                {t.about.title}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <p className="text-lg leading-relaxed text-center">
+                {t.about.story}
               </p>
-            </div>
-            {/* Google Maps */}
-            <div className="w-full h-64 rounded-lg overflow-hidden shadow-lg">
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1529.4653403470595!2d84.36240244828377!3d24.809591260273233!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x398d03003d66f1fd%3A0xe6b25ba06efbf139!2sMahaveer%20Hanuman%20mandir!5e1!3m2!1sen!2sin!4v1752425886742!5m2!1sen!2sin"
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen={true}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Hanuman Mandir Location"
-              ></iframe>
-            </div>
-          </CardContent>
+              <div className="text-center">
+                <p className="font-semibold text-[hsl(var(--maroon))] flex items-center justify-center gap-2">
+                  <MapPin className="w-5 h-5" />
+                  {t.about.address}
+                </p>
+              </div>
+              {/* Google Maps */}
+              <div className="w-full h-64 rounded-lg overflow-hidden shadow-lg">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1529.4653403470595!2d84.36240244828377!3d24.809591260273233!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x398d03003d66f1fd%3A0xe6b25ba06efbf139!2sMahaveer%20Hanuman%20mandir!5e1!3m2!1sen!2sin!4v1752425886742!5m2!1sen!2sin"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen={true}
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Hanuman Mandir Location"
+                ></iframe>
+              </div>
+            </CardContent>
+          </div>
         </Card>
+        
+        {/* 4.png image on the right side */}
+        <img
+          src="/4.png"
+          alt="Divine Hanuman"
+          className="absolute w-56 md:w-72 lg:w-96 h-auto pointer-events-none select-none"
+          style={{
+            objectFit: 'contain',
+            background: 'transparent',
+            filter: 'drop-shadow(0 8px 24px rgba(255, 215, 0, 0.4)) drop-shadow(0 4px 12px rgba(255, 165, 0, 0.3))',
+            transition: 'all 0.3s ease-in-out',
+            zIndex: 10,
+            top: 'calc(50% + 5cm)',
+            right: '1cm',
+            transform: 'translateY(-50%)'
+          }}
+          draggable="false"
+        />
       </section>
 
       {/* Donate Section */}
@@ -736,7 +866,8 @@ export default function HanumanMandir() {
           <h2 className="text-sanskrit text-3xl font-bold text-center mb-12 text-[hsl(var(--maroon))]">
             {t.donate.title}
           </h2>
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div className="relative flex justify-center items-center">
+            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {/* QR Code */}
             <Card className="card-sacred animate-slide-in-left">
               <CardContent className="p-6 text-center">
@@ -786,6 +917,31 @@ export default function HanumanMandir() {
                 </p>
               </CardContent>
             </Card>
+            </div>
+            {/* Hanuman image on the left */}
+            <img
+              src="/1.png"
+              alt="Hanuman ji"
+              className="hidden md:block absolute left-[-20px] top-1/3 -translate-y-1/2 w-80 h-auto pointer-events-none select-none"
+              style={{
+                objectFit: 'contain',
+                filter: 'drop-shadow(0 4px 16px #FFD70088) drop-shadow(0 0 8px #FF6F00AA)',
+                background: 'transparent',
+              }}
+              draggable="false"
+            />
+            {/* Mobile version of Hanuman image */}
+            <img
+              src="/1.png"
+              alt="Hanuman ji"
+              className="md:hidden mx-auto mt-8 w-32 h-auto pointer-events-none select-none"
+              style={{
+                objectFit: 'contain',
+                filter: 'drop-shadow(0 4px 16px #FFD70088) drop-shadow(0 0 8px #FF6F00AA)',
+                background: 'transparent',
+              }}
+              draggable="false"
+            />
           </div>
         </div>
       </section>
@@ -795,8 +951,16 @@ export default function HanumanMandir() {
         <h2 className="text-sanskrit text-3xl font-bold text-center mb-12 text-[hsl(var(--maroon))]">
           {t.donors.title}
         </h2>
-        <Card className="card-sacred max-w-4xl mx-auto">
-          <CardContent className="p-6">
+        <Card className="card-sacred max-w-4xl mx-auto" style={{
+          backgroundImage: "url('/11.jpeg')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          borderRadius: 'inherit',
+          position: 'relative',
+          overflow: 'hidden',
+        }}>
+          <CardContent className="p-6" style={{ position: 'relative', zIndex: 2 }}>
             {donors.length === 0 ? (
               <p className="text-center text-muted-foreground">{t.donors.empty}</p>
             ) : (
@@ -823,6 +987,124 @@ export default function HanumanMandir() {
           <p className="text-sanskrit text-lg font-semibold text-[hsl(var(--maroon))] bg-gradient-to-r from-[hsl(var(--gold-light))] to-[hsl(var(--gold))] bg-clip-text text-transparent px-4 py-2 rounded-lg shadow-[var(--shadow-gold)]">
             "दान वही जो हृदय से निकले, और मंदिर वही जो श्रद्धा से खड़ा हो।"
           </p>
+        </div>
+      </section>
+
+      {/* Virtual Temple Section - Redesigned */}
+      <section
+        id="virtual-temple"
+        className="py-20 md:py-28 relative overflow-hidden flex flex-col items-center justify-center"
+        style={{
+          background: 'linear-gradient(135deg, #fff7e6 60%, #ffe0b2 100%)',
+          borderTop: '8px solid #FFD700',
+          borderBottom: '8px solid #FFD700',
+          boxShadow: '0 0 64px 0 #ffd70044',
+          position: 'relative',
+        }}
+      >
+        {/* Surya Mandala SVG background */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+          <svg width="700" height="700" viewBox="0 0 700 700" fill="none" xmlns="http://www.w3.org/2000/svg" style={{opacity:0.13}}>
+            <circle cx="350" cy="350" r="320" stroke="#FFD700" strokeWidth="18" fill="url(#mandalaGradient)"/>
+            <circle cx="350" cy="350" r="220" stroke="#FFA500" strokeWidth="8" fill="none"/>
+            <circle cx="350" cy="350" r="120" stroke="#FFB300" strokeWidth="4" fill="none"/>
+            <defs>
+              <radialGradient id="mandalaGradient" cx="0.5" cy="0.5" r="0.5" fx="0.5" fy="0.5">
+                <stop offset="0%" stopColor="#fffbe6"/>
+                <stop offset="100%" stopColor="#FFD700" stopOpacity="0.2"/>
+              </radialGradient>
+            </defs>
+          </svg>
+        </div>
+        {/* Subtle Sanskrit watermark */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+          <span className="text-[10rem] md:text-[16rem] font-sanskrit text-[#FFD700] opacity-10 select-none" style={{fontFamily:'Tiro Devanagari Sanskrit, serif'}}>ॐ</span>
+        </div>
+        {/* Divine Particles */}
+        <DivineParticles />
+        {/* Temple Arch Title */}
+        <div className="relative z-10 flex flex-col items-center mb-8">
+          <svg width="420" height="120" viewBox="0 0 420 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="mb-[-2.5rem] hidden md:block">
+            <path d="M10 110 Q210 10 410 110" stroke="#FFD700" strokeWidth="10" fill="none"/>
+            <path d="M30 110 Q210 30 390 110" stroke="#FFA500" strokeWidth="6" fill="none"/>
+          </svg>
+          <div className="relative flex items-center justify-center gap-4">
+            <span className="text-[2.5rem] md:text-[3.5rem] text-[#FFD700] drop-shadow-glow animate-glow-mandala" style={{textShadow:'0 0 24px #FFD700, 0 0 48px #FFA500'}}>
+              <svg width="60" height="60" viewBox="0 0 60 60" fill="none" className="inline-block align-middle mr-1"><circle cx="30" cy="30" r="28" stroke="#FFD700" strokeWidth="4" fill="#fffbe6"/><text x="50%" y="54%" textAnchor="middle" fill="#FFA500" fontSize="2.2rem" fontFamily="Tiro Devanagari Sanskrit, serif">ॐ</text></svg>
+            </span>
+            <h2 className="text-sanskrit text-3xl md:text-5xl font-bold text-center px-6 py-2 rounded-xl bg-gradient-to-r from-[#fffbe6cc] to-[#ffe0b2cc] shadow-lg border-4 border-[#FFD700]" style={{fontFamily:'Tiro Devanagari Sanskrit, serif', letterSpacing:'0.04em', color:'#B91C1C', textShadow:'0 2px 8px #FFD700, 0 0 2px #fff'}}>
+              {t.virtualTempleTitle}
+            </h2>
+            <span className="text-[2.5rem] md:text-[3.5rem] text-[#FFD700] drop-shadow-glow animate-glow-mandala" style={{textShadow:'0 0 24px #FFD700, 0 0 48px #FFA500'}}>
+              <svg width="60" height="60" viewBox="0 0 60 60" fill="none" className="inline-block align-middle ml-1"><circle cx="30" cy="30" r="28" stroke="#FFD700" strokeWidth="4" fill="#fffbe6"/><text x="50%" y="54%" textAnchor="middle" fill="#FFA500" fontSize="2.2rem" fontFamily="Tiro Devanagari Sanskrit, serif">ॐ</text></svg>
+            </span>
+          </div>
+        </div>
+        <div className="max-w-2xl mx-auto text-center relative z-10">
+          <p className="text-lg md:text-xl mb-8 text-amber-900 font-sanskrit" style={{fontFamily:'Tiro Devanagari Sanskrit, serif'}}>
+            {t.virtualTempleDesc}
+          </p>
+          <Link to="/virtual-temple">
+            <Button className="btn-saffron text-lg px-8 py-4 text-xl rounded-full border-4 border-[#FFD700] shadow-lg hover:shadow-[0_0_32px_4px_#FFD70055] transition-all duration-200 bg-gradient-to-r from-[#FFD700] to-[#FFA500] text-[#B91C1C] font-bold flex items-center gap-2">
+              <Sparkles className="w-6 h-6 mr-3 animate-pulse-sacred" />
+              {t.virtualTempleEnter}
+            </Button>
+          </Link>
+          {/* Pooja Thali Buttons */}
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Aarti Thali */}
+            <div className="relative group flex flex-col items-center justify-center">
+              <div className="rounded-full border-4 border-[#FFD700] bg-gradient-to-br from-[#fffbe6] to-[#ffe0b2] shadow-xl p-8 transition-all duration-200 group-hover:scale-105 group-hover:shadow-[0_0_32px_8px_#FFD70055] flex flex-col items-center justify-center" style={{minWidth:180, minHeight:180, position:'relative'}}>
+                <span className="text-5xl mb-2 animate-diya-flicker">🪔</span>
+                <h3 className="text-xl font-bold mb-1 text-[#B91C1C] font-sanskrit" style={{fontFamily:'Tiro Devanagari Sanskrit, serif'}}>{t.virtualTempleAarti}</h3>
+                <p className="text-sm text-amber-800 font-sanskrit" style={{fontFamily:'Tiro Devanagari Sanskrit, serif'}}>{t.virtualTempleAartiDesc}</p>
+                {/* Diya Glow */}
+                <span className="absolute bottom-4 left-1/2 -translate-x-1/2 w-16 h-8 bg-gradient-to-t from-[#FFD70099] to-transparent rounded-full blur-lg opacity-70 animate-pulse-sacred" />
+              </div>
+            </div>
+            {/* Mannat Thali */}
+            <div className="relative group flex flex-col items-center justify-center">
+              <div className="rounded-full border-4 border-[#FFD700] bg-gradient-to-br from-[#fffbe6] to-[#ffe0b2] shadow-xl p-8 transition-all duration-200 group-hover:scale-105 group-hover:shadow-[0_0_32px_8px_#FFD70055] flex flex-col items-center justify-center" style={{minWidth:180, minHeight:180, position:'relative'}}>
+                <span className="text-5xl mb-2 animate-hands">🙏</span>
+                <h3 className="text-xl font-bold mb-1 text-[#B91C1C] font-sanskrit" style={{fontFamily:'Tiro Devanagari Sanskrit, serif'}}>{t.virtualTempleWish}</h3>
+                <p className="text-sm text-amber-800 font-sanskrit" style={{fontFamily:'Tiro Devanagari Sanskrit, serif'}}>{t.virtualTempleWishDesc}</p>
+                {/* Hands Glow */}
+                <span className="absolute bottom-4 left-1/2 -translate-x-1/2 w-16 h-8 bg-gradient-to-t from-[#FFD70099] to-transparent rounded-full blur-lg opacity-70 animate-pulse-sacred" />
+              </div>
+            </div>
+            {/* Pushpanjali Thali */}
+            <div className="relative group flex flex-col items-center justify-center">
+              <div className="rounded-full border-4 border-[#FFD700] bg-gradient-to-br from-[#fffbe6] to-[#ffe0b2] shadow-xl p-8 transition-all duration-200 group-hover:scale-105 group-hover:shadow-[0_0_32px_8px_#FFD70055] flex flex-col items-center justify-center" style={{minWidth:180, minHeight:180, position:'relative'}}>
+                <span className="text-5xl mb-2 animate-flower-fall">🌸</span>
+                <h3 className="text-xl font-bold mb-1 text-[#B91C1C] font-sanskrit" style={{fontFamily:'Tiro Devanagari Sanskrit, serif'}}>{t.virtualTemplePushpanjali}</h3>
+                <p className="text-sm text-amber-800 font-sanskrit" style={{fontFamily:'Tiro Devanagari Sanskrit, serif'}}>{t.virtualTemplePushpanjaliDesc}</p>
+                {/* Flower Glow */}
+                <span className="absolute bottom-4 left-1/2 -translate-x-1/2 w-16 h-8 bg-gradient-to-t from-[#FFD70099] to-transparent rounded-full blur-lg opacity-70 animate-pulse-sacred" />
+              </div>
+            </div>
+          </div>
+          {/* Audio Chant Toggle */}
+          <div className="absolute top-6 right-6 z-20 flex items-center gap-2 bg-[#fffbe6cc] rounded-full px-4 py-2 shadow border-2 border-[#FFD700]">
+            <span className="text-amber-900 font-sanskrit text-sm">चैन्टिंग</span>
+            <button
+              onClick={() => setIsAudioPlayerVisible((v) => !v)}
+              className="w-8 h-8 rounded-full bg-gradient-to-br from-[#FFD700] to-[#FFA500] flex items-center justify-center shadow hover:scale-110 transition-all"
+              aria-label="Toggle Chant Audio"
+            >
+              {isAudioPlayerVisible ? <Pause className="w-5 h-5 text-[#B91C1C]" /> : <Play className="w-5 h-5 text-[#B91C1C]" />}
+            </button>
+          </div>
+          {/* Audio Player (soft chant, muted by default) */}
+          {isAudioPlayerVisible && (
+            <audio autoPlay loop controls style={{display:'block',margin:'1rem auto 0'}}>
+              <source src="/Shri Hanuman Chalisa.mp3" type="audio/mpeg" />
+              Your browser does not support the audio element.
+            </audio>
+          )}
+        </div>
+        {/* Responsive temple-style divider for mobile */}
+        <div className="block md:hidden w-full mt-12">
+          <svg width="100%" height="32" viewBox="0 0 400 32" fill="none"><path d="M0 30 Q200 2 400 30" stroke="#FFD700" strokeWidth="6" fill="none"/></svg>
         </div>
       </section>
 
@@ -1106,6 +1388,19 @@ export default function HanumanMandir() {
         setAudioPlaying={setAudioPlaying}
       />
       <DownloadLanguageModal open={showDownloadModal.open} onClose={() => setShowDownloadModal({ open: false, granth: null })} granth={showDownloadModal.granth} />
+      {/* Hanuman ji image sitting on the top right border of the screen */}
+      <img
+        src="/hanu.png"
+        alt="Hanuman ji"
+        className="fixed -top-4 right-2 z-50 w-20 h-20 md:w-32 md:h-32 pointer-events-none select-none"
+        style={{
+          objectFit: 'contain',
+          background: 'transparent',
+          borderRadius: '50%',
+          filter: 'drop-shadow(0 4px 16px #FFD70088) drop-shadow(0 0 8px #FF6F00AA)',
+        }}
+        draggable="false"
+      />
     </div>
   );
 }
