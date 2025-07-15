@@ -675,44 +675,48 @@ export default function HanumanMandir() {
   return (
     <div className="min-h-screen bg-sacred-pattern mandala-bg">
 
-      {/* Language Selector */}
-      <div className="fixed top-4 left-4 z-50">
-        <select 
-          value={language} 
-          onChange={(e) => setLanguage(e.target.value)}
-          className="btn-gold rounded-lg px-3 py-2 text-sm font-medium"
-        >
-          <option value="hindi">हिंदी</option>
-          <option value="english">English</option>
-          <option value="bhojpuri">भोजपुरी</option>
-        </select>
-      </div>
-
-      {/* Navigation */}
-      <nav className="bg-gradient-to-r from-[hsl(var(--maroon-dark))] to-[hsl(var(--maroon))] text-white shadow-[var(--shadow-sacred)] sticky top-0 z-40">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex flex-wrap justify-center gap-4 text-sm font-medium">
-            {Object.entries(t.nav).map(([key, value]) => (
-              <a
-                key={key}
-                href={`#${key}`}
-                className="hover:text-[hsl(var(--gold))] transition-[var(--transition-divine)] px-3 py-1 rounded"
-              >
-                {String(value)}
-              </a>
-            ))}
+      {/* Mobile-Optimized Header */}
+      <header className="bg-gradient-to-r from-[hsl(var(--maroon-dark))] to-[hsl(var(--maroon))] text-white shadow-lg sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-3">
+          {/* Top row with language selector and title */}
+          <div className="flex items-center justify-between mb-3">
+            <select 
+              value={language} 
+              onChange={(e) => setLanguage(e.target.value as 'hindi' | 'english' | 'bhojpuri')}
+              className="bg-[hsl(var(--gold))] text-[hsl(var(--maroon))] rounded-lg px-2 py-1 text-xs font-medium border-0 focus:ring-2 focus:ring-[hsl(var(--gold))] focus:ring-opacity-50"
+            >
+              <option value="hindi">हिंदी</option>
+              <option value="english">English</option>
+              <option value="bhojpuri">भोजपुरी</option>
+            </select>
+            <h1 className="text-sanskrit text-lg font-bold text-[hsl(var(--gold))]">
+              {t.subtitle}
+            </h1>
+          </div>
+          
+          {/* Mobile Navigation - Horizontal scrollable */}
+          <div className="overflow-x-auto scrollbar-hide">
+            <div className="flex gap-2 text-xs font-medium min-w-max pb-2">
+              {Object.entries(t.nav).map(([key, value]) => (
+                <a
+                  key={key}
+                  href={`#${key}`}
+                  className="hover:text-[hsl(var(--gold))] transition-colors px-3 py-2 rounded-lg bg-[hsl(var(--maroon))] hover:bg-[hsl(var(--maroon-dark))] whitespace-nowrap"
+                >
+                  {String(value)}
+                </a>
+              ))}
+            </div>
           </div>
         </div>
-      </nav>
+      </header>
 
-      {/* Hero Section */}
-      <section id="home" className="py-20 text-center animate-fade-in relative">
-        <div className="flex flex-row items-center justify-center gap-8" style={{position: 'relative', zIndex: 2}}>
-          <div style={{ marginLeft: '-6cm' }}>
-            <RamChakra />
-          </div>
-          <div>
-            <h1 className="text-sanskrit text-4xl md:text-6xl font-bold mb-4 flex items-center justify-center gap-4 animate-fade-in" 
+      {/* Mobile-Optimized Hero Section */}
+      <section id="home" className="py-8 md:py-20 text-center animate-fade-in relative">
+        <div className="container mx-auto px-4">
+          {/* Mobile: Stacked layout */}
+          <div className="md:hidden space-y-6">
+            <h1 className="text-sanskrit text-3xl font-bold mb-4 flex items-center justify-center gap-2 animate-fade-in" 
                 style={{
                   background: 'linear-gradient(135deg, #8B0000 0%, #DC143C 50%, #FF4500 100%)',
                   backgroundClip: 'text',
@@ -722,64 +726,92 @@ export default function HanumanMandir() {
                   filter: 'drop-shadow(0 2px 4px rgba(255, 215, 0, 0.5))',
                   WebkitTextStroke: '1px #6b1b1b'
                 }}>
-              <span role="img" aria-label="folded hands" className="animate-bounce">🙏</span>
+              <span role="img" aria-label="folded hands" className="animate-bounce text-2xl">🙏</span>
               {t.title}
-              <span role="img" aria-label="folded hands" className="animate-bounce" style={{animationDelay: '0.5s'}}>🙏</span>
+              <span role="img" aria-label="folded hands" className="animate-bounce text-2xl" style={{animationDelay: '0.5s'}}>🙏</span>
             </h1>
-            <h2 className="text-sanskrit text-2xl md:text-4xl mb-8 animate-fade-in" 
-                style={{
-                  background: 'linear-gradient(135deg, #FF8C00 0%, #FFD700 50%, #FFA500 100%)',
-                  backgroundClip: 'text',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  textShadow: '0 2px 8px #b36b00, 0 4px 16px #fffbe6, 0 0 2px #fff',
-                  filter: 'drop-shadow(0 1px 2px rgba(255, 215, 0, 0.4))',
-                  fontWeight: '700',
-                  letterSpacing: '0.05em',
-                  WebkitTextStroke: '0.7px #b36b00'
-                }}>
-              {t.subtitle}
-            </h2>
-            <div className="animate-pulse-sacred inline-block p-4 rounded-full bg-gradient-to-r from-[hsl(var(--saffron))] to-[hsl(var(--gold))]">
-              <Heart className="w-8 h-8 text-white" />
+            
+            {/* Mobile Image */}
+            <div className="flex justify-center">
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-[hsl(var(--gold))] to-[hsl(var(--saffron))] rounded-full blur-xl opacity-30 animate-pulse"></div>
+                <img 
+                  src="/download (1).jpeg" 
+                  alt="Divine Hanuman"
+                  className="relative z-10 w-40 h-40 object-cover rounded-full border-4 border-[hsl(var(--gold))] shadow-2xl"
+                  style={{
+                    filter: 'drop-shadow(0 8px 32px rgba(255, 193, 7, 0.4)) brightness(1.1) contrast(1.2) saturate(1.3)',
+                    clipPath: 'circle(50% at 50% 50%)',
+                    background: 'transparent',
+                    mixBlendMode: 'multiply',
+                    backgroundColor: 'transparent'
+                  }}
+                />
+                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-transparent via-transparent to-[hsl(var(--gold)/0.1)] pointer-events-none"></div>
+              </div>
+            </div>
+            
+            <div className="animate-pulse-sacred inline-block p-3 rounded-full bg-gradient-to-r from-[hsl(var(--saffron))] to-[hsl(var(--gold))]">
+              <Heart className="w-6 h-6 text-white" />
             </div>
           </div>
-          {/* Right side image with artistic styling */}
-          <div className="hidden md:block" style={{ marginRight: '-6cm' }}>
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-[hsl(var(--gold))] to-[hsl(var(--saffron))] rounded-full blur-xl opacity-30 animate-pulse"></div>
-              <img 
-                src="/download (1).jpeg" 
-                alt="Divine Hanuman"
-                className="relative z-10 w-64 h-64 object-cover rounded-full border-4 border-[hsl(var(--gold))] shadow-2xl"
-                style={{
-                  filter: 'drop-shadow(0 8px 32px rgba(255, 193, 7, 0.4)) brightness(1.1) contrast(1.2) saturate(1.3)',
-                  clipPath: 'circle(50% at 50% 50%)',
-                  background: 'transparent',
-                  mixBlendMode: 'multiply',
-                  backgroundColor: 'transparent'
-                }}
-              />
-              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-transparent via-transparent to-[hsl(var(--gold)/0.1)] pointer-events-none"></div>
+          
+          {/* Desktop: Original layout */}
+          <div className="hidden md:flex flex-row items-center justify-center gap-8" style={{position: 'relative', zIndex: 2}}>
+            <div style={{ marginLeft: '-6cm' }}>
+              <RamChakra />
             </div>
-          </div>
-          {/* Mobile version of the image */}
-          <div className="md:hidden flex justify-center mt-8">
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-[hsl(var(--gold))] to-[hsl(var(--saffron))] rounded-full blur-xl opacity-30 animate-pulse"></div>
-              <img 
-                src="/download (1).jpeg" 
-                alt="Divine Hanuman"
-                className="relative z-10 w-48 h-48 object-cover rounded-full border-4 border-[hsl(var(--gold))] shadow-2xl"
-                style={{
-                  filter: 'drop-shadow(0 8px 32px rgba(255, 193, 7, 0.4)) brightness(1.1) contrast(1.2) saturate(1.3)',
-                  clipPath: 'circle(50% at 50% 50%)',
-                  background: 'transparent',
-                  mixBlendMode: 'multiply',
-                  backgroundColor: 'transparent'
-                }}
-              />
-              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-transparent via-transparent to-[hsl(var(--gold)/0.1)] pointer-events-none"></div>
+            <div>
+              <h1 className="text-sanskrit text-6xl font-bold mb-4 flex items-center justify-center gap-4 animate-fade-in" 
+                  style={{
+                    background: 'linear-gradient(135deg, #8B0000 0%, #DC143C 50%, #FF4500 100%)',
+                    backgroundClip: 'text',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    textShadow: '0 2px 8px #6b1b1b, 0 4px 16px #fffbe6, 0 0 2px #fff',
+                    filter: 'drop-shadow(0 2px 4px rgba(255, 215, 0, 0.5))',
+                    WebkitTextStroke: '1px #6b1b1b'
+                  }}>
+                <span role="img" aria-label="folded hands" className="animate-bounce">🙏</span>
+                {t.title}
+                <span role="img" aria-label="folded hands" className="animate-bounce" style={{animationDelay: '0.5s'}}>🙏</span>
+              </h1>
+              <h2 className="text-sanskrit text-4xl mb-8 animate-fade-in" 
+                  style={{
+                    background: 'linear-gradient(135deg, #FF8C00 0%, #FFD700 50%, #FFA500 100%)',
+                    backgroundClip: 'text',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    textShadow: '0 2px 8px #b36b00, 0 4px 16px #fffbe6, 0 0 2px #fff',
+                    filter: 'drop-shadow(0 1px 2px rgba(255, 215, 0, 0.4))',
+                    fontWeight: '700',
+                    letterSpacing: '0.05em',
+                    WebkitTextStroke: '0.7px #b36b00'
+                  }}>
+                {t.subtitle}
+              </h2>
+              <div className="animate-pulse-sacred inline-block p-4 rounded-full bg-gradient-to-r from-[hsl(var(--saffron))] to-[hsl(var(--gold))]">
+                <Heart className="w-8 h-8 text-white" />
+              </div>
+            </div>
+            {/* Right side image with artistic styling */}
+            <div style={{ marginRight: '-6cm' }}>
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-[hsl(var(--gold))] to-[hsl(var(--saffron))] rounded-full blur-xl opacity-30 animate-pulse"></div>
+                <img 
+                  src="/download (1).jpeg" 
+                  alt="Divine Hanuman"
+                  className="relative z-10 w-64 h-64 object-cover rounded-full border-4 border-[hsl(var(--gold))] shadow-2xl"
+                  style={{
+                    filter: 'drop-shadow(0 8px 32px rgba(255, 193, 7, 0.4)) brightness(1.1) contrast(1.2) saturate(1.3)',
+                    clipPath: 'circle(50% at 50% 50%)',
+                    background: 'transparent',
+                    mixBlendMode: 'multiply',
+                    backgroundColor: 'transparent'
+                  }}
+                />
+                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-transparent via-transparent to-[hsl(var(--gold)/0.1)] pointer-events-none"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -841,11 +873,11 @@ export default function HanumanMandir() {
           </div>
         </Card>
         
-        {/* 4.png image on the right side */}
+        {/* 4.png image - hidden on mobile to avoid layout issues */}
         <img
           src="/4.png"
           alt="Divine Hanuman"
-          className="absolute w-56 md:w-72 lg:w-96 h-auto pointer-events-none select-none"
+          className="hidden md:block absolute w-56 md:w-72 lg:w-96 h-auto pointer-events-none select-none"
           style={{
             objectFit: 'contain',
             background: 'transparent',
@@ -867,12 +899,12 @@ export default function HanumanMandir() {
             {t.donate.title}
           </h2>
           <div className="relative flex justify-center items-center">
-            <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 max-w-4xl mx-auto">
             {/* QR Code */}
             <Card className="card-sacred animate-slide-in-left">
               <CardContent className="p-6 text-center">
                 <h3 className="text-xl font-semibold mb-4">{t.donate.upi}</h3>
-                <div className="w-48 h-48 mx-auto bg-white rounded-lg shadow-inner p-4 mb-4">
+                <div className="w-32 h-32 md:w-48 md:h-48 mx-auto bg-white rounded-lg shadow-inner p-4 mb-4">
                   <img 
                     src="/lovable-uploads/5731e681-e78a-4132-bd66-2204a53043f8.png" 
                     alt="Hanuman Mandir QR Code"
@@ -1051,35 +1083,35 @@ export default function HanumanMandir() {
             </Button>
           </Link>
           {/* Pooja Thali Buttons */}
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8">
             {/* Aarti Thali */}
             <div className="relative group flex flex-col items-center justify-center">
-              <div className="rounded-full border-4 border-[#FFD700] bg-gradient-to-br from-[#fffbe6] to-[#ffe0b2] shadow-xl p-8 transition-all duration-200 group-hover:scale-105 group-hover:shadow-[0_0_32px_8px_#FFD70055] flex flex-col items-center justify-center" style={{minWidth:180, minHeight:180, position:'relative'}}>
-                <span className="text-5xl mb-2 animate-diya-flicker">🪔</span>
-                <h3 className="text-xl font-bold mb-1 text-[#B91C1C] font-sanskrit" style={{fontFamily:'Tiro Devanagari Sanskrit, serif'}}>{t.virtualTempleAarti}</h3>
-                <p className="text-sm text-amber-800 font-sanskrit" style={{fontFamily:'Tiro Devanagari Sanskrit, serif'}}>{t.virtualTempleAartiDesc}</p>
+              <div className="rounded-full border-4 border-[#FFD700] bg-gradient-to-br from-[#fffbe6] to-[#ffe0b2] shadow-xl p-4 md:p-8 transition-all duration-200 group-hover:scale-105 group-hover:shadow-[0_0_32px_8px_#FFD70055] flex flex-col items-center justify-center" style={{minWidth:'140px', minHeight:'140px', position:'relative'}}>
+                <span className="text-3xl md:text-5xl mb-2 animate-diya-flicker">🪔</span>
+                <h3 className="text-lg md:text-xl font-bold mb-1 text-[#B91C1C] font-sanskrit" style={{fontFamily:'Tiro Devanagari Sanskrit, serif'}}>{t.virtualTempleAarti}</h3>
+                <p className="text-xs md:text-sm text-amber-800 font-sanskrit" style={{fontFamily:'Tiro Devanagari Sanskrit, serif'}}>{t.virtualTempleAartiDesc}</p>
                 {/* Diya Glow */}
-                <span className="absolute bottom-4 left-1/2 -translate-x-1/2 w-16 h-8 bg-gradient-to-t from-[#FFD70099] to-transparent rounded-full blur-lg opacity-70 animate-pulse-sacred" />
+                <span className="absolute bottom-2 md:bottom-4 left-1/2 -translate-x-1/2 w-12 md:w-16 h-6 md:h-8 bg-gradient-to-t from-[#FFD70099] to-transparent rounded-full blur-lg opacity-70 animate-pulse-sacred" />
               </div>
             </div>
             {/* Mannat Thali */}
             <div className="relative group flex flex-col items-center justify-center">
-              <div className="rounded-full border-4 border-[#FFD700] bg-gradient-to-br from-[#fffbe6] to-[#ffe0b2] shadow-xl p-8 transition-all duration-200 group-hover:scale-105 group-hover:shadow-[0_0_32px_8px_#FFD70055] flex flex-col items-center justify-center" style={{minWidth:180, minHeight:180, position:'relative'}}>
-                <span className="text-5xl mb-2 animate-hands">🙏</span>
-                <h3 className="text-xl font-bold mb-1 text-[#B91C1C] font-sanskrit" style={{fontFamily:'Tiro Devanagari Sanskrit, serif'}}>{t.virtualTempleWish}</h3>
-                <p className="text-sm text-amber-800 font-sanskrit" style={{fontFamily:'Tiro Devanagari Sanskrit, serif'}}>{t.virtualTempleWishDesc}</p>
+              <div className="rounded-full border-4 border-[#FFD700] bg-gradient-to-br from-[#fffbe6] to-[#ffe0b2] shadow-xl p-4 md:p-8 transition-all duration-200 group-hover:scale-105 group-hover:shadow-[0_0_32px_8px_#FFD70055] flex flex-col items-center justify-center" style={{minWidth:'140px', minHeight:'140px', position:'relative'}}>
+                <span className="text-3xl md:text-5xl mb-2 animate-hands">🙏</span>
+                <h3 className="text-lg md:text-xl font-bold mb-1 text-[#B91C1C] font-sanskrit" style={{fontFamily:'Tiro Devanagari Sanskrit, serif'}}>{t.virtualTempleWish}</h3>
+                <p className="text-xs md:text-sm text-amber-800 font-sanskrit" style={{fontFamily:'Tiro Devanagari Sanskrit, serif'}}>{t.virtualTempleWishDesc}</p>
                 {/* Hands Glow */}
-                <span className="absolute bottom-4 left-1/2 -translate-x-1/2 w-16 h-8 bg-gradient-to-t from-[#FFD70099] to-transparent rounded-full blur-lg opacity-70 animate-pulse-sacred" />
+                <span className="absolute bottom-2 md:bottom-4 left-1/2 -translate-x-1/2 w-12 md:w-16 h-6 md:h-8 bg-gradient-to-t from-[#FFD70099] to-transparent rounded-full blur-lg opacity-70 animate-pulse-sacred" />
               </div>
             </div>
             {/* Pushpanjali Thali */}
             <div className="relative group flex flex-col items-center justify-center">
-              <div className="rounded-full border-4 border-[#FFD700] bg-gradient-to-br from-[#fffbe6] to-[#ffe0b2] shadow-xl p-8 transition-all duration-200 group-hover:scale-105 group-hover:shadow-[0_0_32px_8px_#FFD70055] flex flex-col items-center justify-center" style={{minWidth:180, minHeight:180, position:'relative'}}>
-                <span className="text-5xl mb-2 animate-flower-fall">🌸</span>
-                <h3 className="text-xl font-bold mb-1 text-[#B91C1C] font-sanskrit" style={{fontFamily:'Tiro Devanagari Sanskrit, serif'}}>{t.virtualTemplePushpanjali}</h3>
-                <p className="text-sm text-amber-800 font-sanskrit" style={{fontFamily:'Tiro Devanagari Sanskrit, serif'}}>{t.virtualTemplePushpanjaliDesc}</p>
+              <div className="rounded-full border-4 border-[#FFD700] bg-gradient-to-br from-[#fffbe6] to-[#ffe0b2] shadow-xl p-4 md:p-8 transition-all duration-200 group-hover:scale-105 group-hover:shadow-[0_0_32px_8px_#FFD70055] flex flex-col items-center justify-center" style={{minWidth:'140px', minHeight:'140px', position:'relative'}}>
+                <span className="text-3xl md:text-5xl mb-2 animate-flower-fall">🌸</span>
+                <h3 className="text-lg md:text-xl font-bold mb-1 text-[#B91C1C] font-sanskrit" style={{fontFamily:'Tiro Devanagari Sanskrit, serif'}}>{t.virtualTemplePushpanjali}</h3>
+                <p className="text-xs md:text-sm text-amber-800 font-sanskrit" style={{fontFamily:'Tiro Devanagari Sanskrit, serif'}}>{t.virtualTemplePushpanjaliDesc}</p>
                 {/* Flower Glow */}
-                <span className="absolute bottom-4 left-1/2 -translate-x-1/2 w-16 h-8 bg-gradient-to-t from-[#FFD70099] to-transparent rounded-full blur-lg opacity-70 animate-pulse-sacred" />
+                <span className="absolute bottom-2 md:bottom-4 left-1/2 -translate-x-1/2 w-12 md:w-16 h-6 md:h-8 bg-gradient-to-t from-[#FFD70099] to-transparent rounded-full blur-lg opacity-70 animate-pulse-sacred" />
               </div>
             </div>
           </div>
@@ -1115,7 +1147,7 @@ export default function HanumanMandir() {
           <h2 className="text-sanskrit text-3xl font-bold text-center mb-12 text-[hsl(var(--maroon))] drop-shadow-lg">
             {t.granths.title}
           </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
             {granths.map((granth, index) => {
               let bgImg = '';
               if(granth.titleEn==='Bhagavad Gita') bgImg = "/bhagwat.jpeg";
@@ -1205,7 +1237,7 @@ export default function HanumanMandir() {
         <h2 className="text-sanskrit text-3xl font-bold text-center mb-12 text-[hsl(var(--maroon))]">
           {t.videos.title}
         </h2>
-        <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 max-w-4xl mx-auto">
           {videos.map((video, index) => (
             <Card key={index} className="card-sacred">
               <CardContent className="p-6 text-center">

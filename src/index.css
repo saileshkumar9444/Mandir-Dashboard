@@ -302,4 +302,37 @@
   .temple-sanctum .h-96 {
     height: 20rem;
   }
+  
+  /* Mobile-specific optimizations */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Mobile touch improvements */
+  button, a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Mobile text sizing */
+  .text-sanskrit {
+    font-size: clamp(1rem, 4vw, 2rem);
+  }
+  
+  /* Mobile spacing */
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  /* Mobile card improvements */
+  .card-sacred {
+    margin: 0.5rem;
+    border-radius: 0.75rem;
+  }
 }
