@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { 
   Bell, 
   Flame, 
@@ -25,6 +25,19 @@ import { useLanguage } from '../context/LanguageContext';
 
 const VirtualTemple = () => {
   const { language } = useLanguage();
+  const navigate = useNavigate();
+  
+  // Exit function that navigates to main page and scrolls to virtual temple section
+  const handleExit = () => {
+    navigate('/');
+    // Use setTimeout to ensure navigation completes before scrolling
+    setTimeout(() => {
+      const virtualTempleSection = document.getElementById('virtual-temple');
+      if (virtualTempleSection) {
+        virtualTempleSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
+  };
   // Move translations object inside the component
   const translations = {
     hindi: {
@@ -191,12 +204,14 @@ const VirtualTemple = () => {
   const [isPrasadOffered, setIsPrasadOffered] = useState(false);
   const [prasadPosition, setPrasadPosition] = useState({ x: 0, y: 0 });
   const [isDraggingPrasad, setIsDraggingPrasad] = useState(false);
+  const [isMantraPlaying, setIsMantraPlaying] = useState(false);
   const { toast } = useToast();
   const [clickedButton, setClickedButton] = useState<string | null>(null);
   
   const audioRef = useRef<HTMLAudioElement>(null);
   const bellAudioRef = useRef<HTMLAudioElement>(null);
   const aartiAudioRef = useRef<HTMLAudioElement>(null);
+  const mantraAudioRef = useRef<HTMLAudioElement>(null);
   const templeRef = useRef<HTMLDivElement>(null);
 
   // 1. Replace isFlowersRaining with an array of flower sets
@@ -223,6 +238,16 @@ const VirtualTemple = () => {
     }
   };
 
+  const toggleMantra = () => {
+    if (isMantraPlaying) {
+      mantraAudioRef.current?.pause();
+      setIsMantraPlaying(false);
+    } else {
+      mantraAudioRef.current?.play();
+      setIsMantraPlaying(true);
+    }
+  };
+
   const toggleMute = () => {
     setIsAudioMuted(!isAudioMuted);
     if (audioRef.current) {
@@ -231,6 +256,9 @@ const VirtualTemple = () => {
     if (aartiAudioRef.current) {
       aartiAudioRef.current.muted = !isAudioMuted;
     }
+    if (mantraAudioRef.current) {
+      mantraAudioRef.current.muted = !isAudioMuted;
+    }
   };
 
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -238,6 +266,7 @@ const VirtualTemple = () => {
     setVolume(newVolume);
     if (audioRef.current) audioRef.current.volume = newVolume;
     if (aartiAudioRef.current) aartiAudioRef.current.volume = newVolume;
+    if (mantraAudioRef.current) mantraAudioRef.current.volume = newVolume;
   };
 
   // Interactive elements
@@ -283,9 +312,9 @@ const VirtualTemple = () => {
       title: t.flowers,
       description: t.flowersMsg,
     });
-    setTimeout(() => {
-      setFlowerSets(prev => prev.filter(set => set.id !== id));
-    }, 60000); // 1 minute
+      setTimeout(() => {
+    setFlowerSets(prev => prev.filter(set => set.id !== id));
+  }, 40000); // 40 seconds
   };
 
   const startFullAarti = () => {
@@ -367,12 +396,16 @@ const VirtualTemple = () => {
         draggable="false"
       />
       {/* Exit Temple Button */}
-      <Link to="/" aria-label={t.exitTempleAria} className="fixed top-6 left-6 z-50">
-        <button className="flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-yellow-200 via-orange-100 to-amber-100 shadow-lg border-2 border-amber-400 text-[hsl(var(--maroon))] font-bold text-lg hover:scale-105 hover:shadow-2xl transition-all duration-200 animate-glow">
-          <span className="text-2xl" role="img" aria-label="conch">🪔</span>
+      <div className="fixed top-6 left-6 z-[9999] pointer-events-auto">
+        <button 
+          onClick={handleExit}
+          aria-label={t.exitTempleAria} 
+          className="flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-yellow-200 via-orange-100 to-amber-100 shadow-lg border-2 border-amber-400 text-[hsl(var(--maroon))] font-bold text-lg hover:scale-105 hover:shadow-2xl transition-all duration-200 animate-glow cursor-pointer"
+        >
+          <span className="text-2xl" role="img" aria-label="diya lamp">🪔</span>
           {t.exitTemple}
         </button>
-      </Link>
+      </div>
       {/* Background Elements */}
       <div className="absolute inset-0 bg-sacred-pattern opacity-20"></div>
       
@@ -401,7 +434,10 @@ const VirtualTemple = () => {
         <source src="/bell.mp3" type="audio/mpeg" />
       </audio>
       <audio ref={aartiAudioRef}>
-        <source src="/aarti-sound.mp3" type="audio/mpeg" />
+        <source src="/aarthi.mpeg.wav" type="audio/wav" />
+      </audio>
+      <audio ref={mantraAudioRef} loop>
+        <source src="/mantr.mp3" type="audio/mpeg" />
       </audio>
 
       {/* Temple Container */}
@@ -459,27 +495,57 @@ const VirtualTemple = () => {
                 <div className="absolute inset-0 bg-yellow-200 rounded-full opacity-30 animate-pulse"></div>
               )}
               
-              {/* Flower Rain Effect */}
+              {/* Flower Rain Effect - Falling Animation */}
               {flowerSets.map((set, setIdx) => (
                 <div
-                  key={set.id}
+                  key={`falling-${set.id}`}
+                  className="absolute w-full flex justify-center items-start top-0 left-0 z-30 pointer-events-none"
+                  style={{height: '100%', transform: `translateX(calc(${set.offset}px + 3cm))`}}
+                >
+                  {["/8.4.png", "/8.5.png", "/8.6.png", "/8.7.png", "/8.4.png", "/8.5.png", "/8.6.png", "/8.7.png", "/8.4.png", "/8.5.png"].map((src, i) => (
+                    <img
+                      key={`falling-${src}-${set.id}-${i}`}
+                      src={src}
+                      alt={`Falling Flower ${i+1}`}
+                      className="mx-1 absolute"
+                      style={{
+                        width: '40px',
+                        height: '40px',
+                        objectFit: 'contain',
+                        filter: 'drop-shadow(0 2px 8px rgba(255, 215, 0, 0.3)) brightness(1.02)',
+                        opacity: 0.95,
+                        animation: `flowerFall 3s linear forwards`,
+                        animationDelay: `${i * 0.2}s`,
+                        top: '-50px',
+                        left: `${Math.random() * 200 - 100}px`
+                      }}
+                      draggable="false"
+                    />
+                  ))}
+                </div>
+              ))}
+              
+              {/* Flower Rain Effect - Settled at Feet */}
+              {flowerSets.map((set, setIdx) => (
+                <div
+                  key={`settled-${set.id}`}
                   className="absolute w-full flex justify-center items-end bottom-0 left-0 z-30 pointer-events-none"
-                  style={{height: '30%', transform: `translateX(${set.offset}px)`}}
+                  style={{height: '20%', transform: `translateX(${set.offset}px)`}}
                 >
                   {["/8.4.png", "/8.5.png", "/8.6.png", "/8.7.png"].map((src, i) => (
                     <img
-                      key={src + set.id}
+                      key={`settled-${src}-${set.id}-${i}`}
                       src={src}
-                      alt={`Flower ${i+1}`}
-                      className="mx-2"
+                      alt={`Settled Flower ${i+1}`}
+                      className="mx-1"
                       style={{
-                        width: '54px',
-                        height: '54px',
+                        width: '40px',
+                        height: '40px',
                         objectFit: 'contain',
-                        filter: 'drop-shadow(0 4px 16px #FFD70088) brightness(1.08)',
-                        opacity: 0.98,
+                        filter: 'drop-shadow(0 2px 8px rgba(255, 215, 0, 0.3)) brightness(1.02)',
+                        opacity: 0.95,
                         transition: 'transform 0.5s',
-                        transform: `translateY(-${16 + i*8}px) scale(1.08)`
+                        transform: `translateY(-${8 + i*4}px) scale(1.02)`
                       }}
                       draggable="false"
                     />
@@ -508,6 +574,22 @@ const VirtualTemple = () => {
             0% { box-shadow: 0 0 0 0 #FFD70088, 0 0 0 0 #FFA50044; transform: scale(1); }
             50% { box-shadow: 0 0 32px 16px #FFD70088, 0 0 64px 32px #FFA50044; transform: scale(1.12); }
             100% { box-shadow: 0 0 0 0 #FFD70000, 0 0 0 0 #FFA50000; transform: scale(1); }
+          }
+          @keyframes flowerFall {
+            0% {
+              transform: translateY(-50px) rotate(0deg);
+              opacity: 0;
+            }
+            10% {
+              opacity: 0.95;
+            }
+            80% {
+              opacity: 0.95;
+            }
+            100% {
+              transform: translateY(calc(100vh - 100px)) rotate(180deg);
+              opacity: 0;
+            }
           }
           .spiritual-bg {
             position: absolute;
@@ -675,8 +757,8 @@ const VirtualTemple = () => {
           {/* Music/Chant Button */}
           <div className="flex flex-col items-center">
             <button
-              onClick={() => handleButtonClick('music', toggleMute)}
-              className={`w-20 h-20 flex items-center justify-center shadow-lg hover:scale-105 transition-all duration-300 relative group bg-transparent ring-0 ${!isAudioMuted ? 'animate-pulse' : ''} ${clickedButton==='music' ? 'spiritual-click' : ''}`}
+              onClick={() => handleButtonClick('music', toggleMantra)}
+              className={`w-20 h-20 flex items-center justify-center shadow-lg hover:scale-105 transition-all duration-300 relative group bg-transparent ring-0 ${isMantraPlaying ? 'animate-pulse' : ''} ${clickedButton==='music' ? 'spiritual-click' : ''}`}
               style={{ boxShadow: 'none', background: 'transparent' }}
               aria-label="Music/Chant"
             >
@@ -713,32 +795,7 @@ const VirtualTemple = () => {
           <div className="text-3xl">🍛</div>
         </div>
 
-        {/* Audio Controls */}
-        <div className="absolute top-10 left-10 bg-white/80 backdrop-blur-sm rounded-lg p-4 shadow-lg z-40">
-          <div className="flex items-center gap-4">
-            <Button
-              onClick={toggleMute}
-              variant="ghost"
-              size="sm"
-              className="w-10 h-10 rounded-full"
-            >
-              {isAudioMuted ? <VolumeX className="w-5 h-5" /> : <Volume2 className="w-5 h-5" />}
-            </Button>
-            
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-medium">{t.volume}</span>
-              <input
-                type="range"
-                min="0"
-                max="1"
-                step="0.1"
-                value={volume}
-                onChange={handleVolumeChange}
-                className="w-20"
-              />
-            </div>
-          </div>
-        </div>
+
 
         {/* Wish Section */}
         <div className="absolute top-10 right-10 w-80 bg-white/80 backdrop-blur-sm rounded-lg p-6 shadow-lg z-40">
