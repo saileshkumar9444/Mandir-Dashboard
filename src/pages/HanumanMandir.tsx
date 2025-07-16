@@ -493,6 +493,12 @@ export default function HanumanMandir() {
   const [isAudioPlayerVisible, setIsAudioPlayerVisible] = useState(false);
   // Add state for download modal
   const [showDownloadModal, setShowDownloadModal] = useState({ open: false, granth: null });
+  // 1. Add state for audio modal and player
+  const [showRamAudioModal, setShowRamAudioModal] = useState(false);
+  const [selectedKand, setSelectedKand] = useState('Baal Kand');
+  const [currentTrack, setCurrentTrack] = useState(0);
+  const audioPlayerRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   const t = content[language];
 
@@ -672,6 +678,57 @@ export default function HanumanMandir() {
     setShowDownloadModal({ open: false, granth: null });
   };
 
+  // 2. Define Kands and tracks
+  const ramKands = [
+    {
+      name: 'Baal Kand',
+      tracks: [
+        { title: '1. बाल कांड - भाग 1', file: '/New folder/1_baal kand.mpeg.mp3' },
+        { title: '2. बाल कांड - भाग 2', file: '/New folder/2.mpeg.mp3' },
+        { title: '3. बाल कांड - भाग 3', file: '/New folder/3.mpeg.mp3' },
+        { title: '4. बाल कांड - भाग 4', file: '/New folder/4.mpeg.mp3' },
+        { title: '5. बाल कांड - भाग 5', file: '/New folder/5.mp3' },
+        { title: '6. बाल कांड - भाग 6', file: '/New folder/6.mp3' },
+        { title: '7. बाल कांड - भाग 7', file: '/New folder/7.mp3' },
+        { title: '8. श्री राम - बाल कांड', file: '/New folder/sree ram.mp3' },
+      ],
+    },
+    // Add more Kands here later
+  ];
+  const kandTracks = ramKands.find(k => k.name === selectedKand)?.tracks || [];
+
+  // 3. Audio player logic
+  const handlePlayPause = () => {
+    if (!audioPlayerRef.current) return;
+    if (isPlaying) {
+      audioPlayerRef.current.pause();
+    } else {
+      audioPlayerRef.current.play();
+    }
+  };
+  const handleNext = () => {
+    setCurrentTrack((prev) => (prev + 1 < kandTracks.length ? prev + 1 : 0));
+  };
+  const handlePrev = () => {
+    setCurrentTrack((prev) => (prev - 1 >= 0 ? prev - 1 : kandTracks.length - 1));
+  };
+  const handleEnded = () => {
+    if (currentTrack + 1 < kandTracks.length) {
+      setCurrentTrack(currentTrack + 1);
+    } else {
+      setIsPlaying(false);
+    }
+  };
+  useEffect(() => {
+    if (audioPlayerRef.current) {
+      if (isPlaying) {
+        audioPlayerRef.current.play();
+      } else {
+        audioPlayerRef.current.pause();
+      }
+    }
+  }, [isPlaying, currentTrack]);
+
   return (
     <div className="min-h-screen bg-sacred-pattern mandala-bg">
 
@@ -680,34 +737,34 @@ export default function HanumanMandir() {
         <div className="container mx-auto px-4 py-3">
           {/* Top row with language selector and title */}
           <div className="flex items-center justify-between mb-3">
-            <select 
-              value={language} 
+        <select 
+          value={language} 
               onChange={(e) => setLanguage(e.target.value as 'hindi' | 'english' | 'bhojpuri')}
               className="bg-[hsl(var(--gold))] text-[hsl(var(--maroon))] rounded-lg px-2 py-1 text-xs font-medium border-0 focus:ring-2 focus:ring-[hsl(var(--gold))] focus:ring-opacity-50"
-            >
-              <option value="hindi">हिंदी</option>
-              <option value="english">English</option>
-              <option value="bhojpuri">भोजपुरी</option>
-            </select>
+        >
+          <option value="hindi">हिंदी</option>
+          <option value="english">English</option>
+          <option value="bhojpuri">भोजपुरी</option>
+        </select>
             <h1 className="text-sanskrit text-lg font-bold text-[hsl(var(--gold))]">
               {t.subtitle}
             </h1>
-          </div>
-          
+      </div>
+
           {/* Mobile Navigation - Horizontal scrollable */}
           <div className="overflow-x-auto scrollbar-hide">
             <div className="flex gap-2 text-xs font-medium min-w-max pb-2">
-              {Object.entries(t.nav).map(([key, value]) => (
-                <a
-                  key={key}
-                  href={`#${key}`}
+            {Object.entries(t.nav).map(([key, value]) => (
+              <a
+                key={key}
+                href={`#${key}`}
                   className="hover:text-[hsl(var(--gold))] transition-colors px-3 py-2 rounded-lg bg-[hsl(var(--maroon))] hover:bg-[hsl(var(--maroon-dark))] whitespace-nowrap"
-                >
-                  {String(value)}
-                </a>
-              ))}
-            </div>
+              >
+                {String(value)}
+              </a>
+            ))}
           </div>
+        </div>
         </div>
       </header>
 
@@ -758,60 +815,60 @@ export default function HanumanMandir() {
           
           {/* Desktop: Original layout */}
           <div className="hidden md:flex flex-row items-center justify-center gap-8" style={{position: 'relative', zIndex: 2}}>
-            <div style={{ marginLeft: '-6cm' }}>
-              <RamChakra />
-            </div>
-            <div>
+          <div style={{ marginLeft: '-6cm' }}>
+            <RamChakra />
+          </div>
+          <div>
               <h1 className="text-sanskrit text-6xl font-bold mb-4 flex items-center justify-center gap-4 animate-fade-in" 
-                  style={{
-                    background: 'linear-gradient(135deg, #8B0000 0%, #DC143C 50%, #FF4500 100%)',
-                    backgroundClip: 'text',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    textShadow: '0 2px 8px #6b1b1b, 0 4px 16px #fffbe6, 0 0 2px #fff',
-                    filter: 'drop-shadow(0 2px 4px rgba(255, 215, 0, 0.5))',
-                    WebkitTextStroke: '1px #6b1b1b'
-                  }}>
-                <span role="img" aria-label="folded hands" className="animate-bounce">🙏</span>
-                {t.title}
-                <span role="img" aria-label="folded hands" className="animate-bounce" style={{animationDelay: '0.5s'}}>🙏</span>
-              </h1>
+                style={{
+                  background: 'linear-gradient(135deg, #8B0000 0%, #DC143C 50%, #FF4500 100%)',
+                  backgroundClip: 'text',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  textShadow: '0 2px 8px #6b1b1b, 0 4px 16px #fffbe6, 0 0 2px #fff',
+                  filter: 'drop-shadow(0 2px 4px rgba(255, 215, 0, 0.5))',
+                  WebkitTextStroke: '1px #6b1b1b'
+                }}>
+              <span role="img" aria-label="folded hands" className="animate-bounce">🙏</span>
+              {t.title}
+              <span role="img" aria-label="folded hands" className="animate-bounce" style={{animationDelay: '0.5s'}}>🙏</span>
+            </h1>
               <h2 className="text-sanskrit text-4xl mb-8 animate-fade-in" 
-                  style={{
-                    background: 'linear-gradient(135deg, #FF8C00 0%, #FFD700 50%, #FFA500 100%)',
-                    backgroundClip: 'text',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    textShadow: '0 2px 8px #b36b00, 0 4px 16px #fffbe6, 0 0 2px #fff',
-                    filter: 'drop-shadow(0 1px 2px rgba(255, 215, 0, 0.4))',
-                    fontWeight: '700',
-                    letterSpacing: '0.05em',
-                    WebkitTextStroke: '0.7px #b36b00'
-                  }}>
-                {t.subtitle}
-              </h2>
-              <div className="animate-pulse-sacred inline-block p-4 rounded-full bg-gradient-to-r from-[hsl(var(--saffron))] to-[hsl(var(--gold))]">
-                <Heart className="w-8 h-8 text-white" />
-              </div>
+                style={{
+                  background: 'linear-gradient(135deg, #FF8C00 0%, #FFD700 50%, #FFA500 100%)',
+                  backgroundClip: 'text',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  textShadow: '0 2px 8px #b36b00, 0 4px 16px #fffbe6, 0 0 2px #fff',
+                  filter: 'drop-shadow(0 1px 2px rgba(255, 215, 0, 0.4))',
+                  fontWeight: '700',
+                  letterSpacing: '0.05em',
+                  WebkitTextStroke: '0.7px #b36b00'
+                }}>
+              {t.subtitle}
+            </h2>
+            <div className="animate-pulse-sacred inline-block p-4 rounded-full bg-gradient-to-r from-[hsl(var(--saffron))] to-[hsl(var(--gold))]">
+              <Heart className="w-8 h-8 text-white" />
             </div>
-            {/* Right side image with artistic styling */}
+          </div>
+          {/* Right side image with artistic styling */}
             <div style={{ marginRight: '-6cm' }}>
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-[hsl(var(--gold))] to-[hsl(var(--saffron))] rounded-full blur-xl opacity-30 animate-pulse"></div>
-                <img 
-                  src="/download (1).jpeg" 
-                  alt="Divine Hanuman"
-                  className="relative z-10 w-64 h-64 object-cover rounded-full border-4 border-[hsl(var(--gold))] shadow-2xl"
-                  style={{
-                    filter: 'drop-shadow(0 8px 32px rgba(255, 193, 7, 0.4)) brightness(1.1) contrast(1.2) saturate(1.3)',
-                    clipPath: 'circle(50% at 50% 50%)',
-                    background: 'transparent',
-                    mixBlendMode: 'multiply',
-                    backgroundColor: 'transparent'
-                  }}
-                />
-                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-transparent via-transparent to-[hsl(var(--gold)/0.1)] pointer-events-none"></div>
-              </div>
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-br from-[hsl(var(--gold))] to-[hsl(var(--saffron))] rounded-full blur-xl opacity-30 animate-pulse"></div>
+              <img 
+                src="/download (1).jpeg" 
+                alt="Divine Hanuman"
+                className="relative z-10 w-64 h-64 object-cover rounded-full border-4 border-[hsl(var(--gold))] shadow-2xl"
+                style={{
+                  filter: 'drop-shadow(0 8px 32px rgba(255, 193, 7, 0.4)) brightness(1.1) contrast(1.2) saturate(1.3)',
+                  clipPath: 'circle(50% at 50% 50%)',
+                  background: 'transparent',
+                  mixBlendMode: 'multiply',
+                  backgroundColor: 'transparent'
+                }}
+              />
+              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-transparent via-transparent to-[hsl(var(--gold)/0.1)] pointer-events-none"></div>
+            </div>
             </div>
           </div>
         </div>
@@ -1208,20 +1265,25 @@ export default function HanumanMandir() {
                           )}
                           Audio
                         </Button>
+                      ) : granth.titleEn === 'Ramcharitmanas' ? (
+                        <Button size="sm" className="rounded-full border-2 border-[hsl(var(--gold))] bg-white/60 text-[hsl(var(--maroon))] shadow transition-all duration-200 hover:shadow-[0_0_16px_2px_hsl(var(--gold)/0.5)] hover:scale-110 focus:outline-none" style={{backdropFilter:'blur(2px)'}} onClick={() => setShowRamAudioModal(true)}>
+                          <Play className="w-5 h-5 mr-1" />
+                          Audio
+                        </Button>
                       ) : (
-                    <Button 
-                      size="sm" 
+                        <Button 
+                          size="sm" 
                           className="rounded-full border-2 border-[hsl(var(--gold))] bg-white/60 text-[hsl(var(--maroon))] shadow transition-all duration-200 hover:shadow-[0_0_16px_2px_hsl(var(--gold)/0.5)] hover:scale-110 focus:outline-none"
                           style={{backdropFilter:'blur(2px)'}}
-                      onClick={() => setPlayingAudio(playingAudio === index ? null : index)}
-                    >
-                      {playingAudio === index ? (
+                          onClick={() => setPlayingAudio(playingAudio === index ? null : index)}
+                        >
+                          {playingAudio === index ? (
                             <Pause className="w-5 h-5 mr-1" />
-                      ) : (
+                          ) : (
                             <Play className="w-5 h-5 mr-1" />
-                      )}
-                      Audio
-                    </Button>
+                          )}
+                          Audio
+                        </Button>
                       )}
                   </div>
                   </div>
@@ -1436,6 +1498,46 @@ export default function HanumanMandir() {
         }}
         draggable="false"
       />
+      {/* 5. Add the Dialog/modal for the audio player at the end of the component: */}
+      <Dialog open={showRamAudioModal} onOpenChange={setShowRamAudioModal}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>रामचरितमानस - {selectedKand}</DialogTitle>
+          </DialogHeader>
+          <div className="flex gap-4 mb-4">
+            {ramKands.map(kand => (
+              <button key={kand.name} className={`px-4 py-2 rounded ${selectedKand === kand.name ? 'bg-yellow-300 font-bold' : 'bg-gray-100'}`} onClick={() => { setSelectedKand(kand.name); setCurrentTrack(0); setIsPlaying(false); }}>
+                {kand.name}
+              </button>
+            ))}
+          </div>
+          <div className="mb-4">
+            {kandTracks.length === 0 && <div className="text-red-600">No tracks found for this Kand.</div>}
+            {kandTracks.map((track, idx) => (
+              <div key={track.file} className={`flex items-center gap-2 py-1 ${currentTrack === idx ? 'font-bold text-orange-700' : ''}`}>
+                <button onClick={() => { setCurrentTrack(idx); setIsPlaying(true); }} className="mr-2">
+                  {currentTrack === idx && isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                </button>
+                {track.title}
+              </div>
+            ))}
+          </div>
+          <audio
+            ref={audioPlayerRef}
+            src={kandTracks[currentTrack]?.file}
+            onPlay={() => setIsPlaying(true)}
+            onPause={() => setIsPlaying(false)}
+            onEnded={handleEnded}
+            controls
+            style={{ width: '100%' }}
+          />
+          <div className="flex gap-4 mt-4 justify-center">
+            <Button onClick={handlePrev} disabled={currentTrack === 0}>Prev</Button>
+            <Button onClick={handlePlayPause}>{isPlaying ? 'Pause' : 'Play'}</Button>
+            <Button onClick={handleNext} disabled={currentTrack === kandTracks.length - 1}>Next</Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
